@@ -1,0 +1,10 @@
+{
+  "name"         : "serious",
+  "description"  : "Generic serialization frontend",
+  "copyright"    : "Copyright © 2015, rcorre",
+  "authors"      : ["rcorre"],
+  "license"      : "MIT",
+  "targetType"   : "library",
+  "dependencies" : {
+  }
+}

@@ -1,0 +1,12 @@
+# dub
+.dub/
+dub.selections.json
+
+# docs
+docs/
+docs.json
+__dummy.html
+
+# library
+*.a
+__test__library__
