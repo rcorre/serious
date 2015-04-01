@@ -28,10 +28,6 @@ template isValueAttribute(alias attr) {
   enum isValueAttribute = is(typeof(attr));
 }
 
-auto getMember(string name)() {
-  return (x) => __traits(getMember, x, name);
-}
-
 T construct(T, Params ...)(Params params) {
   static if (is(typeof(T(params)) == T)) {
     return T(params);
