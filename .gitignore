@@ -8,5 +8,5 @@ docs.json
 __dummy.html
 
 # library
+__test__*
 *.a
-__test__library__
