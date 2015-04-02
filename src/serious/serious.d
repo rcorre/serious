@@ -2,11 +2,11 @@ module serious.serious;
 
 import serious.util;
 
-struct serialize {
+struct serializeable {
   string name;
 }
 
-alias isSerialized(alias sym) = hasAttribute!(serialize, sym);
+alias isSerializeable(alias sym) = hasAttribute!(serializeable, sym);
 
 mixin template SerializeEnable() {
   static auto deserialize(Converter, Data)(Data data, Converter conv = Converter.init) {
@@ -14,6 +14,7 @@ mixin template SerializeEnable() {
     import std.typetuple;
     import std.string : format;
     import serious.util;
+    import serious.deserialize;
 
     alias T = typeof(this);
 
@@ -29,7 +30,7 @@ mixin template SerializeEnable() {
         if (conv.hasEntry(data, name)) {
           // entry found, convert to field type and assign to field
           auto entry = conv.getEntry(data, name);
-          auto val = conv.convert!Type(entry);
+          auto val = deserialize!Type(entry, conv);
           __traits(getMember, obj, name) = val;
         }
       }

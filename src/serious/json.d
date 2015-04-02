@@ -21,6 +21,11 @@ struct JsonConverter {
     return json.object[name];
   }
 
+  JSONValue[] iterate(JSONValue json) {
+    assert(json.type == JSON_TYPE.ARRAY, "only json arrays can be iterated");
+    return json.array;
+  }
+
   JSONValue convert(T : bool)(T val) {
     return JSONValue(val);
   }
