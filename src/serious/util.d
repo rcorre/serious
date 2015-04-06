@@ -28,12 +28,18 @@ template isValueAttribute(alias attr) {
   enum isValueAttribute = is(typeof(attr));
 }
 
+/// Get instance members of `T` that are accessible from this scope.
+/// Params:
+///   T = A struct or class type 
+/// Returns: a tuple of strings, each the name of of an accessible instance member of `T`
 template accessibleMembers(T) {
   template canAccess(string member) {
-    enum canAccess = __traits(compiles, __traits(getMember, T.init, member)) ? true : false;
+    enum canAccess = 
+      __traits(compiles, __traits(getMember, T.init, member)); //&&
+      //!__traits(compiles, __traits(getMember, T, member));
   }
 
-  enum accessibleMembers = Filter!(canAccess, __traits(allMembers, T));
+  alias accessibleMembers = Filter!(canAccess, __traits(allMembers, T));
 }
 
 template hasCustomCtor(T) {

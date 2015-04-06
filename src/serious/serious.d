@@ -2,14 +2,17 @@ module serious.serious;
 
 import serious.util;
 
-struct serializeable {
-  string name;
+struct seriousName { string name; }
+
+struct seriousIgnore { }
+struct seriousEnable { }
+
+template isSerializeable(alias sym) {
+  enum isSerializeable = true; // TODO
 }
 
-alias isSerializeable(alias sym) = hasAttribute!(serializeable, sym);
-
 mixin template SerializeEnable() {
-  static auto deserialize(Converter, Data)(Data data, Converter conv = Converter.init) {
+  static auto _deserialize(D)(D data) {
     import std.traits;
     import std.typetuple;
     import std.string : format;
@@ -17,14 +20,17 @@ mixin template SerializeEnable() {
     import serious.deserialize;
 
     alias T = typeof(this);
+    template getMember(obj, name) {
+      enum getMember = __traits(getMember, obj, name);
+    }
 
     // default instantiate object to be populated
     T obj = construct!T;
 
     // iterate over each name-type pair
     foreach(name ; __traits(allMembers, T)) {
-      static if (__traits(compiles, typeof(__traits(getMember, obj, name)))) {
-        alias Type = typeof(__traits(getMember, obj, name));
+      static if (__traits(compiles, typeof(getMember(obj, name)))) {
+        alias Type = typeof(getMember(obj, name));
 
         // look for entry matching member in the data
         if (conv.hasEntry(data, name)) {

@@ -15,13 +15,13 @@ unittest {
   void test(T)() {
     auto json = `{ "i" : 1, "b": false, "f": 0.5, "s": "wat" }`.parseJSON;
 
-    auto obj = T.deserialize!(JsonConverter, JSONValue)(json);
+    auto obj = T._deserialize(json);
     assert(getField!"i"(obj) == 1);
     assert(getField!"b"(obj) == false);
     assert(getField!"f"(obj) == 0.5f);
     assert(getField!"s"(obj) == "wat");
   }
 
-  test!StructSimple;
-  test!StructPrivate;
+  test!SimpleStruct;
+  //test!MemberProtection;
 }

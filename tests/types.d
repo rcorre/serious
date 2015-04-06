@@ -16,6 +16,8 @@ auto getField(string name, T)(T obj) {
 }
 
 struct SimpleStruct {
+  mixin SerializeEnable;
+
   int    i;
   bool   b;
   float  f;
@@ -23,12 +25,16 @@ struct SimpleStruct {
 }
 
 struct MemberProtection {
+  mixin SerializeEnable;
+
   public    int   i;
   protected bool  b;
   private   float f;
 }
 
 struct StructProps {
+  mixin SerializeEnable;
+
   @property {
     // getters
     auto i() { return _i; }
