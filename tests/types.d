@@ -15,28 +15,20 @@ auto getField(string name, T)(T obj) {
   mixin("return obj.%s;".format(name));
 }
 
-struct StructSimple {
-  mixin SerializeEnable;
-
+struct SimpleStruct {
   int    i;
   bool   b;
   float  f;
   string s;
 }
 
-struct StructPrivate {
-  mixin SerializeEnable;
-
-  private:
-  int    i;
-  bool   b;
-  float  f;
-  string s;
+struct MemberProtection {
+  public    int   i;
+  protected bool  b;
+  private   float f;
 }
 
 struct StructProps {
-  mixin SerializeEnable;
-
   @property {
     // getters
     auto i() { return _i; }

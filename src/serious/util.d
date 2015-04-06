@@ -28,6 +28,30 @@ template isValueAttribute(alias attr) {
   enum isValueAttribute = is(typeof(attr));
 }
 
+template accessibleMembers(T) {
+  template canAccess(string member) {
+    enum canAccess = __traits(compiles, __traits(getMember, T.init, member)) ? true : false;
+  }
+
+  enum accessibleMembers = Filter!(canAccess, __traits(allMembers, T));
+}
+
+template hasCustomCtor(T) {
+  enum hasCustomCtor = __traits(hasMember, T, "__ctor") ? true : false;
+}
+
+unittest {
+  struct S1 { }
+  struct S2 { this(string s) { } }
+  class C1 { }
+  class C2 { this() { } }
+
+  static assert(!hasCustomCtor!S1);
+  static assert( hasCustomCtor!S2);
+  static assert(!hasCustomCtor!C1);
+  static assert( hasCustomCtor!C2);
+}
+
 T construct(T, Params ...)(Params params) {
   static if (is(typeof(T(params)) == T)) {
     return T(params);

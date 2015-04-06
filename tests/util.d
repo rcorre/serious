@@ -55,6 +55,7 @@ unittest {
   static assert(findAttribute!(a, s.prop).length == 1);
 }
 
+// hasAttribute
 unittest {
   // free functions
   static assert(hasAttribute!(a, fun0));
@@ -76,4 +77,22 @@ unittest {
   // struct methods
   static assert(hasAttribute!(a, s.fun));
   static assert(hasAttribute!(a, s.prop));
+}
+
+// isValueAttribute
+unittest {
+  static assert(!isValueAttribute!(findAttribute!(a, fun0)[0]));
+  static assert( isValueAttribute!(findAttribute!(a, fun1)[0]));
+  static assert(!isValueAttribute!(findAttribute!(a, fun2)[0]));
+  static assert( isValueAttribute!(findAttribute!(a, fun2)[1]));
+}
+
+// accessibleMembers
+unittest {
+  import tests.types;
+  import std.typecons;
+
+  static assert([accessibleMembers!SimpleStruct] == ["i", "b", "f", "s"]);
+  static assert([accessibleMembers!MemberProtection] == ["i"]);
+  static assert([accessibleMembers!StructProps] == ["i", "b", "f", "s"]);
 }
