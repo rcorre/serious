@@ -10,8 +10,8 @@ T deserialize(T, D)(D data) {
   static if (is(T == struct) || is(T == class)) {
     return deserializeAggregate!T(data);
   }
-  else static if (isInputRange!T && !isSomeString!T) {
-    return deserializeRange!T(data);
+  else static if (isArray!T && !isSomeString!T) {
+    return deserializeArray!T(data);
   }
   else {
     return deserializePrimitive!T(data);
@@ -34,11 +34,13 @@ T deserializeAggregate(T, D)(D data) {
   return T._deserialize(data);
 }
 
-T deserializeRange(T, D)(D data) {
+T deserializeArray(T, D)(D data) {
   static assert(isInputRange!(typeof(data.asRange())),
       "%s must define 'asRange' to deserialize %s".format(D.stringof, T.stringof));
 
-  return data.asRange.map!(x => deserialize!T(x)).array;
+  alias E = ElementType!T;
+
+  return data.asRange.map!(x => deserialize!E(x)).array;
 }
 
 T deserializePrimitive(T, D)(D data) {
