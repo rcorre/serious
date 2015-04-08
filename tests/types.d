@@ -1,7 +1,7 @@
 /// Types defined for unit testing.
 module tests.types;
 
-import serious.serious;
+import serious.generate;
 
 version (unittest) {
 }
@@ -16,7 +16,7 @@ auto getField(string name, T)(T obj) {
 }
 
 struct StructSimple {
-  mixin SerializeEnable;
+  mixin GetSerious;
 
   int    i;
   bool   b;
@@ -25,7 +25,7 @@ struct StructSimple {
 }
 
 struct StructPrivate {
-  mixin SerializeEnable;
+  mixin GetSerious;
 
   private:
   int    i;
@@ -34,8 +34,9 @@ struct StructPrivate {
   string s;
 }
 
+/*
 struct StructProps {
-  mixin SerializeEnable;
+  mixin GetSerious;
 
   @property {
     // getters
@@ -57,3 +58,4 @@ struct StructProps {
   float  _f;
   string _s;
 }
+*/
