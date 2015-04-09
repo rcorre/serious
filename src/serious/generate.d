@@ -37,7 +37,7 @@ mixin template GetSerious() {
 
     // true if `name` represents a non-static member field or function
     template isInstanceMember(string name) {
-      static if (name == "__ctor" || name == "_fromData") {
+      static if (name == "__ctor" || name == "_fromData" || name == "_toData") {
         enum isInstanceMember = false;
       }
       else {
@@ -64,11 +64,21 @@ mixin template GetSerious() {
 
   this(SeriousData data) {
     import std.string : format;
-    import std.typecons : staticIota;
 
     foreach(member ; seriousNames!()) {
       mixin("this.%s = data.%s;".format(member, member));
     }
+  }
+
+  @property auto _toData() {
+    import std.string : format;
+
+    SeriousData data;
+    foreach(member ; seriousNames!()) {
+      mixin("data.%s = this.%s;".format(member, member));
+    }
+
+    return data;
   }
 
   static T _fromData(SeriousData data) {

@@ -10,9 +10,15 @@ else {
 }
 
 /// Helper to check private fields in tests.
-auto getField(string name, T)(T obj) {
+auto getField(string name, T)(in T obj) {
   import std.string : format;
   mixin("return obj.%s;".format(name));
+}
+
+/// Helper to set private fields in tests.
+auto setField(string name, T, V)(ref T obj, in V val) {
+  import std.string : format;
+  mixin("obj.%s = val;".format(name));
 }
 
 struct StructSimple {

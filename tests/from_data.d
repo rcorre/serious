@@ -1,4 +1,4 @@
-module tests.construction;
+module tests.from_data;
 
 import serious.generate;
 import tests.types;
