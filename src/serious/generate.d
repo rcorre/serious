@@ -6,7 +6,6 @@ string generateDataStruct(string[] names, string[] types)() {
   import std.string    : format, join;
   import std.range     : zip;
   import std.algorithm : map;
-  import std.typetuple;
 
   enum structFormat = "static struct SeriousData { %s }";
 
@@ -37,7 +36,14 @@ mixin template GetSerious() {
       !__traits(isStaticFunction, __traits(getMember, T, name));
 
     // true if `name` represents a non-static member field or function
-    enum isInstanceMember(string name) = isInstanceField!name || isInstanceMethod!name;
+    template isInstanceMember(string name) {
+      static if (name == "__ctor" || name == "_fromData") {
+        enum isInstanceMember = false;
+      }
+      else {
+        enum isInstanceMember = isInstanceField!name || isInstanceMethod!name;
+      }
+    }
 
     enum seriousNames = Filter!(isInstanceMember, __traits(allMembers, T));
   }
@@ -55,4 +61,19 @@ mixin template GetSerious() {
   }
 
   mixin(generateDataStruct!([seriousNames!()], [seriousTypeNames!()]));
+
+  this(SeriousData data) {
+    import std.string : format;
+    import std.typecons : staticIota;
+
+    foreach(member ; seriousNames!()) {
+      mixin("this.%s = data.%s;".format(member, member));
+    }
+  }
+
+  static T _fromData(SeriousData data) {
+    import serious.util : construct;
+    // construct chooses whether to use 'new' or not
+    return construct!T(data);
+  }
 }
